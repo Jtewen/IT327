@@ -14,8 +14,9 @@ public class parser{
         }
     }
 
+
     static String isNumeric(String token){
-        
+
         if (Character.isDigit(token.charAt(0))){
             return "n";
         }
@@ -24,6 +25,7 @@ public class parser{
 
     static double E(){
         double tempVal = 0;
+        System.out.println("E called with: " + currentToken);
         switch(isNumeric(currentToken)){
             case "n": 
                 tempVal = T() + Ep(); 
@@ -31,20 +33,18 @@ public class parser{
             case "(": 
                 tempVal = T() + Ep();
                 break;
-            case "+": validity = false;
-            case "-": validity = false;
-            case "*": validity = false;
-            case "/": validity = false;
-            case ")": validity = false;
-            case "$": validity = false;
+            default: validity = false;
         }
-
+        if(tokenList.hasMoreTokens()){
+            validity = false;
+        }
         return tempVal;
-
+        
     }
 
     static double Ep(){
         double tempVal = 0;
+        System.out.println("Ep called with: " + currentToken);
         switch(isNumeric(currentToken)){
             case "+": 
                 chomp(); 
@@ -56,55 +56,46 @@ public class parser{
                 break;
             case ")": chomp();  return 0;
             case "$": chomp();  return 0;
-            case "n": validity = false;
-            case "*": validity = false;
-            case "/": validity = false;
-            case "(": validity = false;
+            default: validity = false;
         }
-
         return tempVal;
     }
 
     static double T(){
         double tempVal = 0;
+        System.out.println("T called with: " + currentToken);
         switch(isNumeric(currentToken)){
             case "n": 
                 tempVal =F() * Tp(); break;
             case "(": 
                 tempVal = F() * Tp(); break;
-            case ")": validity = false;
-            case "*": validity = false;
-            case "/": validity = false;
-            case "+": validity = false;
-            case "-": validity = false;
-            case "$": validity = false;;
+            default: validity = false;
         }
-
         return tempVal;
     }
 
     static double Tp(){
         double tempVal = 0;
+        System.out.println("Tp called with: " + currentToken);
         switch(isNumeric(currentToken)){
             case "+": return 1;
             case "-": return 1;
             case ")": return 1;
-            case "$": return 1;
+            case "$": chomp();return 1;
             case "*": 
                 chomp(); 
                 tempVal = F() * Tp();break;
             case "/": 
                 chomp();    
                 tempVal = 1/(F() * Tp());break;
-            case "(": validity = false;
-            case "n": validity = false;
+            default: validity = false;
         }
-
         return tempVal;
     }
 
     static double F(){
         double tempVal = 0;
+        System.out.println("F called with: " + currentToken);
         switch(isNumeric(currentToken)){
             case "n": 
                 tempVal = Double.parseDouble(currentToken);
@@ -112,12 +103,7 @@ public class parser{
             case "(": 
                 chomp(); 
                 tempVal = E();break;
-            case ")": validity = false;
-            case "*": validity = false;
-            case "/": validity = false;
-            case "+": validity = false;
-            case "-": validity = false;
-            case "$": validity = false;
+            default: validity = false;
         }
 
         return tempVal;
@@ -126,7 +112,7 @@ public class parser{
 
     public static void main(String[] args){
 
-        tokenList = new StringTokenizer("3*7+9/2$", "+-*/()$", true);
+        tokenList = new StringTokenizer("((3*7)$", "+-*/()$", true);
         
         chomp(); 
 
