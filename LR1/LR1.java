@@ -10,7 +10,6 @@ public class LR1{
     static Stack<String> tokenStack = new Stack<String>();
     static Stack<Double> numStack = new Stack<Double>();
     static Stack<Integer> stateStack = new Stack<Integer>();
-    static String input = "(9-2)*3+(3/5)*9/2+11$";
     static boolean valid = false;
 
 
